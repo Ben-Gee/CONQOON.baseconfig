@@ -1,0 +1,22 @@
+baseconfig_hostname: ""
+baseconfig_ssh_known_hosts: []
+baseconfig_allow_passwordless_sudo: no
+baseconfig_file_10periodic: "files/10periodic"
+baseconfig_apt_keys: []
+baseconfig_apt_ppas:
+  - "ppa:git-core/ppa"
+baseconfig_apt_packages:
+  - git
+  - unattended-upgrades
+baseconfig_create_user_and_group: yes
+baseconfig_project_user: "application"
+baseconfig_project_group: "application"
+baseconfig_project_path: "/var/www/application"
+baseconfig_web_user: "www-data"
+baseconfig_web_group: "www-data"
+
+baseconfig_ssl_country: "DE"
+baseconfig_ssl_state: "BW"
+baseconfig_ssl_location: "Stuttgart"
+baseconfig_ssl_key_file: "/etc/ssl/{{ baseconfig_hostname }}.key"
+baseconfig_ssl_cert_file: "/etc/ssl/{{ baseconfig_hostname }}.crt"

@@ -1,0 +1,22 @@
+- name: create self-signed ssl cert/key
+  command: >
+    openssl req -new -nodes -x509
+    -subj "/C={{ baseconfig_ssl_country }}/ST={{ baseconfig_ssl_state }}/L={{ baseconfig_ssl_location }}/O=IT/CN={{ baseconfig_hostname }}" -days 3650
+    -keyout {{ baseconfig_ssl_key_file }} -out {{ baseconfig_ssl_cert_file }} -extensions v3_ca
+  args:
+    creates: "{{ baseconfig_ssl_cert_file }}"
+  when: ssl_cert_type == "selfsigned" or ssl_cert_type == "letsencrypt"
+
+- name: ensure ssl cert/key exist
+  stat:
+    path: "{{ item }}"
+  register: ssl_files
+  with_items:
+    - "{{ baseconfig_ssl_cert_file }}"
+    - "{{ baseconfig_ssl_key_file }}"
+
+- fail: msg="ssl cert file {{ baseconfig_ssl_cert_file }} missing"
+  when: (ssl_cert_type == "selfsigned" or ssl_cert_type == "letsencrypt") and not ssl_files.results[0].stat.exists
+
+- fail: msg="ssl key file {{ baseconfig_ssl_key_file }} missing"
+  when: (ssl_cert_type == "selfsigned" or ssl_cert_type == "letsencrypt") and not ssl_files.results[1].stat.exists
