@@ -103,3 +103,5 @@
   when: baseconfig_allow_passwordless_sudo
 
 - include: ssl.yml
+
+- include: services.yml

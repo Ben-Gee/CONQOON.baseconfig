@@ -1,0 +1,32 @@
+[Unit]
+Description={{ item.description }}
+{% if item.deps is defined %}
+{{ item.deps }}
+{% endif %}
+
+[Service]
+ExecStart={{ item.exec }}
+# Required on some systems
+#WorkingDirectory=/opt/nodeserver
+Restart=always
+ # Restart service after 10 seconds if node service crashes
+ RestartSec=10
+ # Output to syslog
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=nodejs-example
+{% if item.user is defined %}
+User={{ item.user }}
+{% endif %}
+{% if item.group is defined %}
+Group={{ item.group }}
+{% endif %}
+{% if item.env is defined %}
+Environment={{ item.env }}
+{% endif %}
+{% if item.workdir is defined %}
+WorkingDirectory={{ item.workdir }}
+{% endif %}
+
+[Install]
+WantedBy=multi-user.target

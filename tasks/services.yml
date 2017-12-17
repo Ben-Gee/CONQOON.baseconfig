@@ -1,0 +1,26 @@
+---
+- name: setup systemd services
+  template:
+    src: "{{ item.template|default(baseconfig_systemd_services_template) }}"
+    dest: "/etc/systemd/system/{{ item.name }}.service"
+    mode: 0755
+    owner: "root"
+    group: "root"
+  with_items: "{{ baseconfig_systemd_services }}"
+  when: baseconfig_systemd_services
+
+- name: Restart services
+  service:
+    name: "{{ item.name }}"
+    state: started
+    daemon-reload: true
+  with_items: "{{ baseconfig_systemd_services }}"
+  when: baseconfig_systemd_services
+
+- name: Ensure services are started started
+  service:
+    name: "{{ item.name }}"
+    state: "started"
+    enabled: yes
+  with_items: "{{ baseconfig_systemd_services }}"
+  when: baseconfig_systemd_services
