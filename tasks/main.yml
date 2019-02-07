@@ -34,7 +34,6 @@
 
 - name: Make sure server_base_path exists
   file: path={{ server_base_path }} state=directory
-  when: baseconfig_create_user_and_group
 
 - name: Make sure project group exists
   group: name={{ baseconfig_project_group }} state=present
