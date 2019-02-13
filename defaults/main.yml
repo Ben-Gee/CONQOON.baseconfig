@@ -20,6 +20,7 @@ baseconfig_ssl_state: "BW"
 baseconfig_ssl_location: "Stuttgart"
 baseconfig_ssl_key_file: "/etc/ssl/{{ baseconfig_hostname }}.key"
 baseconfig_ssl_cert_file: "/etc/ssl/{{ baseconfig_hostname }}.crt"
+baseconfig_ssl_pem_file:
 
 baseconfig_systemd_services: []
 baseconfig_systemd_services_template: myservice.service.j2
