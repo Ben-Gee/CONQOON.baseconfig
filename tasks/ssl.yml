@@ -7,6 +7,21 @@
     creates: "{{ baseconfig_ssl_cert_file }}"
   when: ssl_cert_type == "selfsigned" or ssl_cert_type == "letsencrypt"
 
+- name: Read ssl key file
+  shell: cat "{{ baseconfig_ssl_key_file }}"
+  register: baseconfig_ssl_key_file_content
+
+- name: Read ssl cert file
+  shell: cat "{{ baseconfig_ssl_cert_file }}"
+  register: baseconfig_ssl_cert_file_content
+
+- name: Generate .pem file
+  template:
+    src: pem.j2
+    dest: "{{ baseconfig_ssl_pem_file }}"
+    mode: 0644
+  when: baseconfig_ssl_pem_file != ""
+
 - name: ensure ssl cert/key exist
   stat:
     path: "{{ item }}"
@@ -14,9 +29,22 @@
   with_items:
     - "{{ baseconfig_ssl_cert_file }}"
     - "{{ baseconfig_ssl_key_file }}"
+    - "{{ baseconfig_ssl_pem_file }}"
 
 - fail: msg="ssl cert file {{ baseconfig_ssl_cert_file }} missing"
   when: (ssl_cert_type == "selfsigned" or ssl_cert_type == "letsencrypt") and not ssl_files.results[0].stat.exists
 
 - fail: msg="ssl key file {{ baseconfig_ssl_key_file }} missing"
   when: (ssl_cert_type == "selfsigned" or ssl_cert_type == "letsencrypt") and not ssl_files.results[1].stat.exists
+
+- fail: msg="ssl pem file {{ baseconfig_ssl_pem_file }} missing"
+  when: baseconfig_ssl_pem_file != "" and not ssl_files.results[2].stat.exists
+
+- name: Fix ssl file permissions
+  file:
+    path: "{{ item }}"
+    mode: 0755
+  with_items:
+    - "{{ baseconfig_ssl_cert_file }}"
+    - "{{ baseconfig_ssl_key_file }}"
+    - "{{ baseconfig_ssl_pem_file }}"

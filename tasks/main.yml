@@ -24,9 +24,8 @@
 
 - name: Install base apt packages
   apt:
-    name: "{{ item }}"
+    name: "{{ baseconfig_apt_packages }}"
     state: latest
-  with_items: "{{ baseconfig_apt_packages }}"
   when: baseconfig_apt_packages is defined and baseconfig_apt_packages | length > 0
 
 - name: Ensure unattended upgrades are configured
