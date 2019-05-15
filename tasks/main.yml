@@ -101,5 +101,6 @@
   when: baseconfig_allow_passwordless_sudo
 
 - include: ssl.yml
+  when: server_ssl_cert_type != "letsencrypt"
 
 - include: services.yml
